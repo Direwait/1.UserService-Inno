@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users(
 
 CREATE TABLE IF NOT EXISTS payment_cards(
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+	user_id UUID REFERENCES users(id) ON DELETE CASCADE,
 	number VARCHAR(16),
 	holder VARCHAR(64),
 	expiration_date DATE,
