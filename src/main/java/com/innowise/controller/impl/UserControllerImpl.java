@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         var user = userService.createUser(userDto);
@@ -27,6 +29,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Override
     public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
         var userById = userService.getUserById(userId);
@@ -34,6 +37,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @PutMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<UserDto> updateUserById(@PathVariable UUID userId, @Valid @RequestBody UserDto userDto) {
         var updateUserById = userService.updateUserById(userId, userDto);
@@ -41,6 +45,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Page<UserDto>> getAllUsers(@RequestParam(required = false) String searchTerm,
                                                      @PageableDefault(size = 10) Pageable pageable) {
@@ -49,6 +54,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @PatchMapping("/active/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Boolean> activateDeactivateUser(@PathVariable UUID userId) {
         var userActive = userService.activateDeactivateUser(userId);
@@ -56,6 +62,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Void> deleteById(@PathVariable UUID userId) {
         userService.deleteById(userId);

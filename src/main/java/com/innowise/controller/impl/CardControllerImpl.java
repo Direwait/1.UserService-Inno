@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class CardControllerImpl implements CardController {
     private final CardService cardService;
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<CardDto> createCard(@Valid @RequestBody CardDto cardDto) {
         var card = cardService.createCard(cardDto);
@@ -28,6 +30,7 @@ public class CardControllerImpl implements CardController {
     }
 
     @GetMapping("/{cardId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Override
     public ResponseEntity<CardDto> getCardById(@PathVariable UUID cardId) {
         var cardById = cardService.getCardById(cardId);
@@ -35,6 +38,7 @@ public class CardControllerImpl implements CardController {
     }
 
     @PutMapping("/{cardId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<CardDto> updateCardById(@PathVariable UUID cardId, @Valid @RequestBody CardDto cardDto) {
         var updateCardById = cardService.updateCardById(cardId, cardDto);
@@ -42,6 +46,7 @@ public class CardControllerImpl implements CardController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Page<CardDto>> getAllCards(@RequestParam(required = false) String number,
                                                      @PageableDefault(size = 10) Pageable pageable
@@ -50,7 +55,9 @@ public class CardControllerImpl implements CardController {
         return ResponseEntity.ok(allCards);
     }
 
+
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Override
     public ResponseEntity<List<CardDto>> getAllCardsByUserId(@PathVariable UUID userId) {
         var allCardsByUserId = cardService.getCardsByUserIdWithUser(userId);
@@ -58,6 +65,7 @@ public class CardControllerImpl implements CardController {
     }
 
     @PatchMapping("/active/{cardId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Boolean> activateDeactivateCard(@PathVariable UUID cardId) {
         var cardActive = cardService.activateDeactivateCard(cardId);
@@ -66,6 +74,7 @@ public class CardControllerImpl implements CardController {
 
 
     @DeleteMapping("/{cardId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Void> deleteById(@PathVariable UUID cardId) {
         cardService.deleteById(cardId);
