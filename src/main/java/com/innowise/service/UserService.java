@@ -12,6 +12,8 @@ public interface UserService {
 
     UserDto getUserById(UUID userId);
 
+    UserDto getUserByEmail(String email);
+
     UserDto updateUserById(UUID userId, UserDto userDto);
 
     boolean activateDeactivateUser(UUID userId);

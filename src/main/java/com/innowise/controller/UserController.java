@@ -4,6 +4,9 @@ import com.innowise.service.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
@@ -12,6 +15,10 @@ public interface UserController {
     ResponseEntity<UserDto> createUser(UserDto userId);
 
     ResponseEntity<UserDto> getUserById(UUID userId);
+
+    @GetMapping("/{mail}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    ResponseEntity<UserDto> getUserByEmail(@PathVariable String mail);
 
     ResponseEntity<UserDto> updateUserById(UUID userId, UserDto userDto);
 

@@ -101,6 +101,19 @@ class UserControllerImplTest extends BaseIntegrationTest {
     }
 
     @Test
+    void getUserByEmail_ShouldReturnUser() throws Exception {
+        UserDto savedUser = createTestUser();
+
+        assertThat(savedUser.getEmail()).isNotNull();
+
+        mockMvc.perform(get("/users/by-email")
+                        .param("email",savedUser.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedUser.getId().toString()))
+                .andExpect(jsonPath("$.email").value(savedUser.getEmail()));
+    }
+
+    @Test
     void getUserById_WithNonExistentId_ShouldReturnNotFound() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
 

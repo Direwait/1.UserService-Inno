@@ -63,6 +63,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "user")
+    public UserDto getUserByEmail(String email) {
+        var userModel = userRepository.findUserWithCardsByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("User not found with email " + email)
+        );
+        return userMapper.modelToDto(userModel);
+    }
+
+    @Override
     @Transactional
     @CachePut(value = "user", key = "#userId")
     public UserDto updateUserById(UUID userId, UserDto userDto) {
