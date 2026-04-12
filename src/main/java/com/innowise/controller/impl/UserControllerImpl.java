@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("/users")
@@ -34,6 +35,14 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
         var userById = userService.getUserById(userId);
         return ResponseEntity.ok(userById);
+    }
+
+    @GetMapping("/batch")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public ResponseEntity<List<UserDto>> getUsersByIds(@RequestParam List<UUID> ids) {
+        var usersByIds = userService.getUsersByIds(ids);
+        return ResponseEntity.ok(usersByIds);
     }
 
     @GetMapping("/by-email")

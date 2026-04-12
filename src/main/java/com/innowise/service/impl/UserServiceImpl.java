@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -60,6 +61,20 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException("User not found with id " + userId)
         );
         return userMapper.modelToDto(userModel);
+    }
+
+    @Cacheable(value = "users", key = "#userIds")
+    @Override
+    public List<UserDto> getUsersByIds(List<UUID> userIds) {
+        List<UserModel> users = userRepository.findAllById(userIds);
+
+        if (users.isEmpty()) {
+            return List.of();
+        }
+
+        return users.stream()
+                .map(userMapper::modelToDto)
+                .toList();
     }
 
     @Override
