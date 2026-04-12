@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserController {
@@ -16,9 +17,7 @@ public interface UserController {
 
     ResponseEntity<UserDto> getUserById(UUID userId);
 
-    @GetMapping("/{mail}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    ResponseEntity<UserDto> getUserByEmail(@PathVariable String mail);
+    ResponseEntity<UserDto> getUserByEmail(String mail);
 
     ResponseEntity<UserDto> updateUserById(UUID userId, UserDto userDto);
 
@@ -27,4 +26,6 @@ public interface UserController {
     ResponseEntity<Boolean> activateDeactivateUser(UUID userId);
 
     ResponseEntity<Void> deleteById(UUID userId);
+
+    ResponseEntity<List<UserDto>> getUsersByIds(List<UUID> ids);
 }
