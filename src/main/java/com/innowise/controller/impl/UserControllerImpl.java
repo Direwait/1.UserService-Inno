@@ -36,6 +36,14 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(userById);
     }
 
+    @GetMapping("/by-email")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Override
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
+        var userByEmail = userService.getUserByEmail(email);
+        return ResponseEntity.ok(userByEmail);
+    }
+
     @PutMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Override

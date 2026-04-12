@@ -107,6 +107,31 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getUserByEmail_WhenUserExists_ShouldReturnUser() {
+        UUID userId = UUID.randomUUID();
+        var email = "test@email.com";
+        UserModel userModel = new UserModel();
+        userModel.setId(userId);
+        userModel.setEmail(email);
+
+        UserDto userDto = new UserDto();
+        userDto.setId(userId);
+        userDto.setEmail(email);
+
+        when(userRepository.findUserWithCardsByEmail(email)).thenReturn(Optional.of(userModel));
+        when(userMapper.modelToDto(userModel)).thenReturn(userDto);
+
+        UserDto result = userService.getUserByEmail(email);
+
+
+        assertThat(result).isNotNull();
+        assertThat(result.getEmail()).isEqualTo(email);
+
+        verify(userRepository).findUserWithCardsByEmail(email);
+        verify(userMapper).modelToDto(userModel);
+    }
+
+    @Test
     void getUserById_WhenUserDoesNotExist_ShouldThrowException() {
         UUID userId = UUID.randomUUID();
 
