@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/users")
@@ -34,6 +37,14 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
         var userById = userService.getUserById(userId);
         return ResponseEntity.ok(userById);
+    }
+
+    @GetMapping("/batch")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public ResponseEntity<List<UserDto>> getUsersByIds(@RequestParam List<UUID> ids) {
+        var usersByIds = userService.getUsersByIds(ids);
+        return ResponseEntity.ok(usersByIds);
     }
 
     @GetMapping("/by-email")
@@ -75,5 +86,20 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<Void> deleteById(@PathVariable UUID userId) {
         userService.deleteById(userId);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/a/debug-headers")
+    public ResponseEntity<Map<String, String>> debugHeaders(
+            @RequestHeader(value = "X-User-Id", required = false) String userId,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole,
+            @RequestHeader(value = "X-Username", required = false) String username,
+            @RequestHeader(value = "Authorization", required = false) String auth) {
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-User-Id", userId != null ? userId : "MISSING");
+        headers.put("X-User-Role", userRole != null ? userRole : "MISSING");
+        headers.put("X-Username", username != null ? username : "MISSING");
+        headers.put("Authorization", auth != null ? "PRESENT (starts with Bearer?)" : "MISSING");
+
+        return ResponseEntity.ok(headers);
     }
 }

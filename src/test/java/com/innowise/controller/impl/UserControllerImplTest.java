@@ -38,6 +38,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         testUser = new UserDto();
+        testUser.setId(UUID.randomUUID());
         testUser.setEmail("test-" + UUID.randomUUID() + "@mail.com");
         testUser.setName("name");
         testUser.setSurname("Test User");

@@ -37,6 +37,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         testUser = new UserDto();
+        testUser.setId(UUID.randomUUID());
         testUser.setName("CardTestUser");
         testUser.setSurname("Test Surname");
         testUser.setBirthDate(LocalDate.now().minusYears(25));
@@ -171,6 +172,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         createCard(testCard);
 
         UserDto otherUser = new UserDto();
+        otherUser.setId(UUID.randomUUID());
         otherUser.setName("Other");
         otherUser.setSurname("User");
         otherUser.setBirthDate(LocalDate.now().minusYears(30));

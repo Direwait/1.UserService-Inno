@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserModel extends Auditable {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    //@GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
