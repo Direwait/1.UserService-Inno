@@ -37,6 +37,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         testUser = new UserDto();
+        testUser.setId(UUID.randomUUID());
         testUser.setName("CardTestUser");
         testUser.setSurname("Test Surname");
         testUser.setBirthDate(LocalDate.now().minusYears(25));
@@ -54,7 +55,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         MvcResult result = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
@@ -72,7 +73,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         MvcResult result = mockMvc.perform(post("/cards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(card)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
@@ -92,7 +93,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         mockMvc.perform(post("/cards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(cardJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.number").value(testCard.getNumber()))
                 .andExpect(jsonPath("$.userId").value(testUser.getId().toString()))
                 .andExpect(jsonPath("$.id").exists());
@@ -171,6 +172,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         createCard(testCard);
 
         UserDto otherUser = new UserDto();
+        otherUser.setId(UUID.randomUUID());
         otherUser.setName("Other");
         otherUser.setSurname("User");
         otherUser.setBirthDate(LocalDate.now().minusYears(30));

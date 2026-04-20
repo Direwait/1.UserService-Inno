@@ -38,6 +38,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         testUser = new UserDto();
+        testUser.setId(UUID.randomUUID());
         testUser.setEmail("test-" + UUID.randomUUID() + "@mail.com");
         testUser.setName("name");
         testUser.setSurname("Test User");
@@ -48,7 +49,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
         MvcResult result = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUser)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
@@ -72,7 +73,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value(testUser.getEmail()))
                 .andExpect(jsonPath("$.id").exists());
     }

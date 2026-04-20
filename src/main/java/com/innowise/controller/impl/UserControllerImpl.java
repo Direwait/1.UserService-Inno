@@ -8,10 +8,11 @@ import com.innowise.service.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("/users")
@@ -21,11 +22,11 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     @PostMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Override
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         var user = userService.createUser(userDto);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @GetMapping("/{userId}")
@@ -34,6 +35,14 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
         var userById = userService.getUserById(userId);
         return ResponseEntity.ok(userById);
+    }
+
+    @GetMapping("/batch")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public ResponseEntity<List<UserDto>> getUsersByIds(@RequestParam List<UUID> ids) {
+        var usersByIds = userService.getUsersByIds(ids);
+        return ResponseEntity.ok(usersByIds);
     }
 
     @GetMapping("/by-email")
