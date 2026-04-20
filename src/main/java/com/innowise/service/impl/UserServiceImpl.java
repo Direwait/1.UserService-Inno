@@ -41,11 +41,11 @@ public class UserServiceImpl implements UserService {
                     "User with email " + userDto.getEmail() + " already exists"
             );
         }
-        if (userDto.getCardDtos().size() > 5) {
+        if (userDto.getCardDtos() != null && userDto.getCardDtos().size() > 5) {
             throw new CardLimitException("User cannot have more than 5 cards");
         }
         var userModel = userMapper.dtoToModel(userDto);
-        if (userModel.getCards() != null && !userModel.getCards().isEmpty()) {
+        if (!userModel.getCards().isEmpty()) {
             for (CardModel card : userModel.getCards()) {
                 card.setUser(userModel);
             }

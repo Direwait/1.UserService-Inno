@@ -55,7 +55,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         MvcResult result = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
@@ -73,7 +73,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         MvcResult result = mockMvc.perform(post("/cards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(card)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
@@ -93,7 +93,7 @@ class CardControllerImplTest extends BaseIntegrationTest {
         mockMvc.perform(post("/cards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(cardJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.number").value(testCard.getNumber()))
                 .andExpect(jsonPath("$.userId").value(testUser.getId().toString()))
                 .andExpect(jsonPath("$.id").exists());
