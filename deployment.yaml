@@ -32,11 +32,8 @@ spec:
             - name: DB_PASSWORD
               value: "password"
 
-            - name: SPRING_DATA_REDIS_HOST
+            - name: SPRING_HOST
               value: "redis"
-
-            - name: SPRING_DATA_REDIS_PORT
-              value: "6379"
 
           livenessProbe:
             httpGet:
