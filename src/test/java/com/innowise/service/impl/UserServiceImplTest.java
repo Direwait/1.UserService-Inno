@@ -1,5 +1,6 @@
 package com.innowise.service.impl;
 
+import com.innowise.config.TestSecurityConfig;
 import com.innowise.dao.repository.specification.UserSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import com.innowise.dao.model.UserModel;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+@Import(TestSecurityConfig.class)
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 

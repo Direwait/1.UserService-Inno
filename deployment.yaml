@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-inno
+  labels:
+    app: user-service-inno
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service-inno
+  template:
+    metadata:
+      labels:
+        app: user-service-inno
+    spec:
+      containers:
+        - name: user-service-inno
+          image: direwait/userservise-inno:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: REDIS_HOST
+            - value: "host.minikube.internal"
+
+            - name: DB_NAME
+              value: "user_db"
+
+            - name: DB_HOST
+              value: "host.minikube.internal"
+
+            - name: DB_USERNAME
+              value: "postgres"
+
+            - name: DB_PASSWORD
+              value: "password"
+
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5

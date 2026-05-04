@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +24,11 @@ public class UserControllerImpl implements UserController {
 
     @PostMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @Override
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        System.out.println("=== User Controller ===");
+        System.out.println("Received user: id=" + userDto.getId() + ", email=" + userDto.getEmail());
+        System.out.println("Auth: " + SecurityContextHolder.getContext().getAuthentication());
+
         var user = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
@@ -62,7 +66,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Override
     public ResponseEntity<Page<UserDto>> getAllUsers(@RequestParam(required = false) String searchTerm,
                                                      @PageableDefault(size = 10) Pageable pageable) {

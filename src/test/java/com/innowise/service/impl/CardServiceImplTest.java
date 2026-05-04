@@ -1,5 +1,6 @@
 package com.innowise.service.impl;
 
+import com.innowise.config.TestSecurityConfig;
 import jakarta.persistence.EntityNotFoundException;
 import com.innowise.dao.model.CardModel;
 import com.innowise.dao.model.UserModel;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+@Import(TestSecurityConfig.class)
 @ExtendWith(MockitoExtension.class)
 class CardServiceImplTest {
     @Mock
