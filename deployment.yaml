@@ -20,14 +20,11 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: REDIS_HOST
-            - value: "host.minikube.internal"
-
             - name: DB_NAME
-              value: "user_db"
+              value: "userdb"
 
             - name: DB_HOST
-              value: "host.minikube.internal"
+              value: "postgres-user"
 
             - name: DB_USERNAME
               value: "postgres"
