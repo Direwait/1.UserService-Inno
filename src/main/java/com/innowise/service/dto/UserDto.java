@@ -3,7 +3,6 @@ package com.innowise.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
 import lombok.*;
 
 import java.io.Serializable;
@@ -19,16 +18,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto implements Serializable {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     private UUID id;
 
-    @NotBlank(message = "Name is not empty")
     private String name;
 
-    @NotBlank(message = "Surname is not empty")
     private String surname;
 
-    @Past(message = "Birthdate must be in past")
     private LocalDate birthDate;
 
     @NotBlank(message = "Email is required")

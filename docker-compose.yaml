@@ -37,6 +37,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis      # было SPRING_REDIS_HOST
       SPRING_DATA_REDIS_PORT: 6379       # было SPRING_REDIS_PORT
       SPRING_LIQUIBASE_ENABLED: "true"
+      JWT_SECRET: ${JWT_SECRET}
       SPRING_LIQUIBASE_CHANGE_LOG: classpath:/db/changelog/db.changelog-master.xml
     depends_on:
       - postgres

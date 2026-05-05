@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DirtiesContext
+@WithMockUser(roles = "ADMIN")
 class UserControllerImplTest extends BaseIntegrationTest {
 
     @Autowired
@@ -38,6 +40,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         testUser = new UserDto();
+        testUser.setId(UUID.randomUUID());
         testUser.setEmail("test-" + UUID.randomUUID() + "@mail.com");
         testUser.setName("name");
         testUser.setSurname("Test User");
@@ -48,7 +51,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
         MvcResult result = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUser)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
@@ -72,7 +75,7 @@ class UserControllerImplTest extends BaseIntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value(testUser.getEmail()))
                 .andExpect(jsonPath("$.id").exists());
     }
