@@ -22,18 +22,8 @@ public class GatewayHeaderFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain chain) throws IOException, ServletException {
 
-        System.out.println("🔵🔵🔵 GATEWAY HEADER FILTER CALLED for URI: " + request.getRequestURI());
         String userId = request.getHeader("X-User-Id");
         String role = request.getHeader("X-User-Role");
-
-        System.out.println("=== GatewayHeaderFilter ===");
-        System.out.println("X-User-Id: " + userId);
-        System.out.println("X-User-Role: " + role);
-        System.out.println("All headers:");
-        request.getHeaderNames().asIterator().forEachRemaining(h ->
-                System.out.println("  " + h + ": " + request.getHeader(h))
-        );
-
 
         if (userId != null && role != null) {
             UsernamePasswordAuthenticationToken auth =

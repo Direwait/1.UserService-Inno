@@ -14,6 +14,13 @@ spec:
       labels:
         app: user-service-inno
     spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox
+          command: ['sh', '-c', 'until nc -z postgres-user 5432; do echo waiting for postgres; sleep 2; done;']
+        - name: wait-for-redis
+          image: busybox
+          command: ['sh', '-c', 'until nc -z redis 6379; do echo waiting for redis; sleep 2; done;']
       containers:
         - name: user-service-inno
           image: direwait/userservise-inno:latest
@@ -22,29 +29,29 @@ spec:
           env:
             - name: DB_NAME
               value: "userdb"
-
             - name: DB_HOST
               value: "postgres-user"
-
+            - name: DB_PORT
+              value: "5432"
             - name: DB_USERNAME
               value: "postgres"
-
             - name: DB_PASSWORD
-              value: "password"
-
-            - name: SPRING_HOST
+              value: "postgres"
+            - name: REDIS_HOST
               value: "redis"
 
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            failureThreshold: 10
 
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-            initialDelaySeconds: 20
-            periodSeconds: 5
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 10
